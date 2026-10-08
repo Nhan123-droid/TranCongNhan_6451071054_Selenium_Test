@@ -260,3 +260,21 @@ class TestLoginE2E(BaseTest):
         error_text = login_page.get_error_message()
         assert error_text is not None, "Không tìm thấy thông báo lỗi!"
         assert "Tài khoản hoặc mật khẩu không đúng" in error_text, f"Thông báo lỗi không khớp. Thực tế: '{error_text}'"
+
+    def test_tc14_sql_injection_username(self):
+        """
+        TC14: Kiểm tra bảo mật SQL Injection cơ bản ở ô Tên đăng nhập
+        Expected: Không đăng nhập được, báo lỗi "Tài khoản hoặc mật khẩu không đúng."
+        """
+        login_page = LoginPage(self.driver)
+        login_page.open()
+
+        # Dùng payload SQL Injection cơ bản
+        login_page.enter_username("' OR 1=1 --")
+        login_page.enter_password("123456")
+        login_page.click_login()
+
+        error_text = login_page.get_error_message()
+        assert error_text is not None, "Không tìm thấy thông báo lỗi!"
+        assert "Tài khoản hoặc mật khẩu không đúng" in error_text, f"Thông báo lỗi không khớp. Thực tế: '{error_text}'"
+
