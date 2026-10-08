@@ -226,3 +226,37 @@ class TestLoginE2E(BaseTest):
         current_url = self.driver.current_url
         assert "/Login" not in current_url, f"Vẫn còn ở trang Login, URL hiện tại: {current_url}"
 
+    def test_tc12_forgot_password(self):
+        """
+        TC12: Kiểm tra chức năng "Bạn quên mật khẩu đăng nhập ?"
+        Expected: Chuyển hướng sang trang hướng dẫn/khôi phục lại mật khẩu.
+        """
+        login_page = LoginPage(self.driver)
+        login_page.open()
+
+        forgot_password_link = self.driver.find_element(*login_page.FORGOT_PASSWORD_LINK)
+        forgot_password_link.click()
+
+        import time
+        time.sleep(2) # Đợi trang chuyển hướng
+
+        current_url = self.driver.current_url
+        # Kiểm tra URL có chứa "GetPass" (trang khôi phục mật khẩu)
+        assert "GetPass" in current_url or "getpass" in current_url.lower(), \
+            f"Chuyển hướng thất bại, URL hiện tại: {current_url}"
+
+    def test_tc13_username_with_spaces(self):
+        """
+        TC13: Kiểm tra nhập Tên đăng nhập chứa ký tự khoảng trắng
+        Expected: Báo lỗi "Tài khoản hoặc mật khẩu không đúng."
+        """
+        login_page = LoginPage(self.driver)
+        login_page.open()
+
+        login_page.enter_username("nguyen van a")
+        login_page.enter_password("123456")
+        login_page.click_login()
+
+        error_text = login_page.get_error_message()
+        assert error_text is not None, "Không tìm thấy thông báo lỗi!"
+        assert "Tài khoản hoặc mật khẩu không đúng" in error_text, f"Thông báo lỗi không khớp. Thực tế: '{error_text}'"

@@ -12,6 +12,7 @@ class LoginPage(BasePage):
     CAPTCHA_INPUT = (By.NAME, "captcha")
     CAPTCHA_IMAGE = (By.ID, "captcha")
     REMEMBER_ME = (By.ID, "persistent")
+    FORGOT_PASSWORD_LINK = (By.PARTIAL_LINK_TEXT, "quên mật khẩu")
 
     # 2. Khai báo các Actions (hành động) trên trang Login
     def open(self):
