@@ -137,3 +137,35 @@ class TestLoginE2E(BaseTest):
         NOTE: Test case này cần OCR để đọc ảnh Captcha => Manual Test.
         """
         pass
+
+    def test_tc9_refresh_captcha_image(self):
+        """
+        TC9: Kiểm tra nút Refresh/Thay đổi Mã bảo mật
+        """
+        login_page = LoginPage(self.driver)
+        login_page.open()
+
+        # Kích hoạt Captcha bằng cách nhập sai 3 lần
+        for _ in range(3):
+            login_page.enter_username("taikhoansai")
+            login_page.enter_password("saimatkhau")
+            login_page.click_login()
+
+        # Lấy src ảnh captcha ban đầu
+        from selenium.webdriver.common.by import By
+        captcha_img = login_page.wait.until(
+            lambda d: d.find_element(*login_page.CAPTCHA_IMAGE)
+        )
+        src_before = captcha_img.get_attribute("src")
+
+        # Click vào link "đây" để đổi captcha mới
+        refresh_link = self.driver.find_element(By.XPATH, "//a[contains(@onclick, 'captcha')]")
+        refresh_link.click()
+
+        import time
+        time.sleep(1)  # Chờ src ảnh được cập nhật
+
+        src_after = captcha_img.get_attribute("src")
+
+        # Src sau khi click phải khác với src ban đầu (có thêm ?t=random)
+        assert src_before != src_after, "Ảnh Captcha KHÔNG thay đổi sau khi click refresh!"
