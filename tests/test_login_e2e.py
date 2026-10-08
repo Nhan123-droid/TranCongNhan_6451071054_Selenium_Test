@@ -129,14 +129,13 @@ class TestLoginE2E(BaseTest):
         # Captcha vẫn phải còn hiển thị
         assert login_page.is_captcha_displayed(), "Captcha phải vẫn còn hiển thị sau khi nhập sai mã bảo mật!"
 
-    @pytest.mark.skip(reason="TC8 yêu cầu đọc CAPTCHA bằng OCR, không thể tự động hóa hoàn toàn. Thực hiện kiểm tra thủ công.")
     def test_tc8_correct_captcha_login_success(self):
         """
         TC8: Nhập đúng user/pass và đúng Mã bảo mật (Sau khi sai 3 lần)
         Expected: Đăng nhập thành công, vào được trang chủ.
         NOTE: Test case này cần OCR để đọc ảnh Captcha => Manual Test.
         """
-        pass
+        pytest.fail("TC8: Không thể tự động hóa hoàn toàn - cần OCR để đọc ảnh CAPTCHA. Thực hiện kiểm tra thủ công.")
 
     def test_tc9_refresh_captcha_image(self):
         """
@@ -169,3 +168,4 @@ class TestLoginE2E(BaseTest):
 
         # Src sau khi click phải khác với src ban đầu (có thêm ?t=random)
         assert src_before != src_after, "Ảnh Captcha KHÔNG thay đổi sau khi click refresh!"
+
