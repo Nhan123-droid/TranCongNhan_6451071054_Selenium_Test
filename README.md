@@ -33,14 +33,23 @@ pytest tests/test_login_e2e.py -v
 pytest tests/test_login_e2e.py::TestLoginE2E::test_tc14_sql_injection_username -v
 ```
 
-## 📋 Danh sách Test Cases (Đã thực hiện)
-Dự án bao gồm 14 kịch bản kiểm thử (Test Cases), bao phủ các trường hợp:
-- Bỏ trống trường dữ liệu.
-- Sai tên đăng nhập / Sai mật khẩu.
-- Hiển thị Captcha sau 3 lần sai.
-- Đăng nhập sai Captcha.
-- Chức năng Remember Me (Giữ trạng thái đăng nhập).
-- Kiểm tra tính năng Quên mật khẩu.
-- Validation khoảng trắng và bảo mật SQL Injection cơ bản.
+## 📋 Bảng Kết Quả Test Cases
 
-*(Lưu ý: Một số Test Case yêu cầu xác thực Captcha hình ảnh hoặc tài khoản thật đã được đánh dấu SKIP hoặc FAIL để yêu cầu kiểm tra thủ công).*
+| STT | Mã TC | Phân loại | Mô tả | Trạng thái | Ghi chú |
+|:---:|:---|:---|:---|:---:|:---|
+| 1 | TC01 | Negative | Để trống tên đăng nhập | ✅ **PASSED** | Theo log pytest chạy đủ testcase |
+| 2 | TC02 | Negative | Để trống mật khẩu | ✅ **PASSED** | Theo log pytest chạy đủ testcase |
+| 3 | TC03 | Negative | Để trống cả tên đăng nhập và mật khẩu | ✅ **PASSED** | Theo log pytest chạy đủ testcase |
+| 4 | TC04 | Negative | Đúng tên đăng nhập, sai mật khẩu | ✅ **PASSED** | Theo log pytest chạy đủ testcase |
+| 5 | TC05 | Negative | Sai tên đăng nhập, đúng mật khẩu | ✅ **PASSED** | Theo log pytest chạy đủ testcase |
+| 6 | TC06 | Negative | Nhập sai thông tin 3 lần liên tiếp (hiện Captcha) | ✅ **PASSED** | Theo log pytest chạy đủ testcase |
+| 7 | TC07 | Negative | Nhập đúng user/pass nhưng sai Mã bảo mật | ✅ **PASSED** | Theo log pytest chạy đủ testcase |
+| 8 | TC08 | Positive | Nhập đúng user/pass và đúng Mã bảo mật | ❌ **FAILED** | Bắt buộc FAILED vì cần OCR để đọc Captcha |
+| 9 | TC09 | Positive | Kiểm tra nút Refresh/Thay đổi Mã bảo mật | ✅ **PASSED** | Theo log pytest chạy đủ testcase |
+| 10 | TC10 | Positive | Đăng nhập thành công và chọn "Giữ tôi luôn đăng nhập" | ❌ **FAILED** | Bắt buộc FAILED do thiếu tài khoản hợp lệ |
+| 11 | TC11 | Positive | Đăng nhập thành công, KHÔNG chọn "Giữ tôi luôn đăng nhập" | ❌ **FAILED** | Bắt buộc FAILED do thiếu tài khoản hợp lệ |
+| 12 | TC12 | Positive | Kiểm tra chức năng "Bạn quên mật khẩu đăng nhập ?" | ✅ **PASSED** | Theo log pytest chạy đủ testcase |
+| 13 | TC13 | Negative | Kiểm tra nhập Tên đăng nhập chứa ký tự khoảng trắng | ✅ **PASSED** | Theo log pytest chạy đủ testcase |
+| 14 | TC14 | Negative | Kiểm tra bảo mật SQL Injection cơ bản ở ô Tên đăng nhập | ✅ **PASSED** | Theo log pytest chạy đủ testcase |
+
+*(Lưu ý: Một số Test Case yêu cầu xác thực Captcha hình ảnh hoặc tài khoản thật (TC08, TC10, TC11) đã được thiết lập `pytest.fail` vì không thể chạy tự động hoàn toàn hoặc thiếu tài nguyên).*
