@@ -17,8 +17,14 @@ class LoginPage(BasePage):
         self.open_url(self.URL)
 
     def get_error_message(self):
-        element = self.wait.until(EC.presence_of_element_located(self.ERROR_MESSAGE))
-        return element.text
+        from selenium.common.exceptions import StaleElementReferenceException
+        for _ in range(3):
+            try:
+                element = self.wait.until(EC.presence_of_element_located(self.ERROR_MESSAGE))
+                return element.text
+            except StaleElementReferenceException:
+                pass
+        return ""
 
     def is_captcha_displayed(self):
         try:
@@ -32,6 +38,9 @@ class LoginPage(BasePage):
 
     def enter_username(self, username):
         self.enter_text(self.USERNAME_INPUT, username)
+
+    def enter_captcha(self, code):
+        self.enter_text(self.CAPTCHA_INPUT, code)
 
     def click_login(self):
         self.click_element(self.LOGIN_BUTTON)

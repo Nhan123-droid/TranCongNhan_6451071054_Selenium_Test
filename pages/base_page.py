@@ -1,6 +1,7 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import StaleElementReferenceException, WebDriverException
+import time
 
 class BasePage:
     def __init__(self, driver):
@@ -15,16 +16,15 @@ class BasePage:
         element.click()
 
     def enter_text(self, locator, text):
-        # Retry tối đa 3 lần để xử lý StaleElementReferenceException
-        # xảy ra khi trang reload sau mỗi lần submit form
-        for _ in range(3):
+        # Retry tối đa 5 lần, chờ trang ổn định sau mỗi lần reload
+        for attempt in range(5):
             try:
                 element = self.wait.until(EC.presence_of_element_located(locator))
                 element.clear()
                 element.send_keys(text)
                 return
-            except StaleElementReferenceException:
-                pass
+            except (StaleElementReferenceException, WebDriverException):
+                time.sleep(0.5)  # Đợi trang reload xong
 
     def get_alert_text(self):
         alert = self.wait.until(EC.alert_is_present())

@@ -102,3 +102,28 @@ class TestLoginE2E(BaseTest):
         
         # Kiểm tra Captcha đã xuất hiện
         assert login_page.is_captcha_displayed(), "Hình ảnh Mã bảo mật (Captcha) KHÔNG hiển thị sau 3 lần nhập sai!"
+
+    def test_tc7_wrong_captcha_after_3_fails(self):
+        """
+        TC7: Nhập đúng user/pass nhưng sai Mã bảo mật (Sau khi sai 3 lần)
+        """
+        login_page = LoginPage(self.driver)
+        login_page.open()
+
+        # Bước 1: Kích hoạt Captcha bằng cách nhập sai 3 lần
+        for _ in range(3):
+            login_page.enter_username("taikhoansai")
+            login_page.enter_password("saimatkhau")
+            login_page.click_login()
+
+        # Bước 2: Nhập đúng user/pass nhưng sai captcha ("XXXXX" là mã giả)
+        login_page.enter_username("nguyenvana")
+        login_page.enter_password("MatKhau123")
+        login_page.enter_captcha("XXXXX")
+        login_page.click_login()
+
+        # Bước 3: Kiểm tra vẫn còn hiển thị lỗi (không được đăng nhập vào)
+        error_text = login_page.get_error_message()
+        assert error_text is not None and len(error_text) > 0, "Không có thông báo lỗi khi nhập sai captcha!"
+        # Captcha vẫn phải còn hiển thị
+        assert login_page.is_captcha_displayed(), "Captcha phải vẫn còn hiển thị sau khi nhập sai mã bảo mật!"
