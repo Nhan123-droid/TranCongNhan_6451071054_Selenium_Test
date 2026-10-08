@@ -68,3 +68,18 @@ class TestLoginE2E(BaseTest):
         error_text = login_page.get_error_message()
         assert "Tài khoản hoặc mật khẩu không đúng" in error_text, f"Lỗi không khớp, nội dung lấy được: {error_text}"
 
+    def test_tc5_wrong_username_correct_password(self):
+        """
+        TC5: Sai tên đăng nhập, đúng mật khẩu
+        """
+        login_page = LoginPage(self.driver)
+        login_page.open()
+        
+        login_page.enter_username("taikhoankhongtontai")
+        login_page.enter_password("MatKhau123")
+        login_page.click_login()
+        
+        # Kiểm tra thông báo lỗi chữ đỏ trên web
+        error_text = login_page.get_error_message()
+        assert "Tài khoản hoặc mật khẩu không đúng" in error_text, f"Lỗi không khớp, nội dung lấy được: {error_text}"
+
