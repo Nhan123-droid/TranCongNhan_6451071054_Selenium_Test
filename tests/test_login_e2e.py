@@ -20,9 +20,9 @@ class TestLoginE2E(BaseTest):
         login_page.click_login()
         
         # 5. Kiểm tra kết quả: Hiển thị thông báo yêu cầu nhập tên đăng nhập.
-        # Hệ thống Văn phòng điện tử UTC thường dùng JS alert cho các lỗi bỏ trống.
-        alert_text = login_page.get_alert_text()
-        assert "Bạn chưa nhập tên đăng nhập" in alert_text, f"Lỗi không khớp, nội dung lấy được: {alert_text}"
+        # Hệ thống Văn phòng điện tử UTC hiển thị lỗi dưới dạng thẻ <div class="error">
+        error_text = login_page.get_error_message()
+        assert "Bạn chưa nhập tên đăng nhập" in error_text, f"Lỗi không khớp, nội dung lấy được: {error_text}"
 
     def test_tc2_empty_password(self):
         """
@@ -36,8 +36,8 @@ class TestLoginE2E(BaseTest):
         login_page.click_login()
         
         # Kiểm tra alert
-        alert_text = login_page.get_alert_text()
-        assert "Bạn chưa nhập mật khẩu" in alert_text, f"Lỗi không khớp, nội dung lấy được: {alert_text}"
+        error_text = login_page.get_error_message()
+        assert "Bạn chưa nhập mật khẩu" in error_text, f"Lỗi không khớp, nội dung lấy được: {error_text}"
 
     def test_tc3_empty_both(self):
         """
@@ -50,5 +50,21 @@ class TestLoginE2E(BaseTest):
         login_page.click_login()
         
         # Kiểm tra alert (trang web sẽ ưu tiên báo lỗi trống tên đăng nhập trước)
-        alert_text = login_page.get_alert_text()
-        assert "Bạn chưa nhập tên đăng nhập" in alert_text, f"Lỗi không khớp, nội dung lấy được: {alert_text}"
+        error_text = login_page.get_error_message()
+        assert "Bạn chưa nhập tên đăng nhập" in error_text, f"Lỗi không khớp, nội dung lấy được: {error_text}"
+
+    def test_tc4_correct_username_wrong_password(self):
+        """
+        TC4: Đúng tên đăng nhập, sai mật khẩu
+        """
+        login_page = LoginPage(self.driver)
+        login_page.open()
+        
+        login_page.enter_username("nguyenvana")
+        login_page.enter_password("SaiMatKhau@123")
+        login_page.click_login()
+        
+        # Kiểm tra thông báo lỗi chữ đỏ trên web
+        error_text = login_page.get_error_message()
+        assert "Tài khoản hoặc mật khẩu không đúng" in error_text, f"Lỗi không khớp, nội dung lấy được: {error_text}"
+
