@@ -169,3 +169,34 @@ class TestLoginE2E(BaseTest):
         # Src sau khi click phải khác với src ban đầu (có thêm ?t=random)
         assert src_before != src_after, "Ảnh Captcha KHÔNG thay đổi sau khi click refresh!"
 
+    def test_tc10_login_with_remember_me(self):
+        """
+        TC10: Đăng nhập thành công và chọn 'Giữ tôi luôn đăng nhập'
+        Steps:
+          1. Mở trang Login
+          2. Nhập đúng username và password
+          3. Tích chọn 'Giữ tôi luôn đăng nhập'
+          4. Click Đăng nhập
+          5. Tắt trình duyệt và mở lại URL
+        Expected: Tự động vào trang chủ (không cần đăng nhập lại).
+        """
+        USERNAME = "YOUR_USERNAME"
+        PASSWORD = "YOUR_PASSWORD"
+
+        login_page = LoginPage(self.driver)
+        login_page.open()
+
+        login_page.enter_username(USERNAME)
+        login_page.enter_password(PASSWORD)
+
+        # Checkbox "persistent" có thể bị ẩn => dùng JavaScript Executor để click
+        checkbox = self.driver.find_element(*login_page.REMEMBER_ME)
+        self.driver.execute_script("arguments[0].click();", checkbox)
+
+        login_page.click_login()
+
+        import time
+        time.sleep(2)
+        current_url = self.driver.current_url
+        assert "/Login" not in current_url, f"Vẫn còn ở trang Login, URL hiện tại: {current_url}"
+

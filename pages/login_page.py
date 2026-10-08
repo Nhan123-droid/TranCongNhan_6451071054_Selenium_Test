@@ -11,6 +11,7 @@ class LoginPage(BasePage):
     ERROR_MESSAGE = (By.CLASS_NAME, "error")
     CAPTCHA_INPUT = (By.NAME, "captcha")
     CAPTCHA_IMAGE = (By.ID, "captcha")
+    REMEMBER_ME = (By.ID, "persistent")
 
     # 2. Khai báo các Actions (hành động) trên trang Login
     def open(self):
