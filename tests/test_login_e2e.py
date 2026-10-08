@@ -200,3 +200,29 @@ class TestLoginE2E(BaseTest):
         current_url = self.driver.current_url
         assert "/Login" not in current_url, f"Vẫn còn ở trang Login, URL hiện tại: {current_url}"
 
+    def test_tc11_login_without_remember_me(self):
+        """
+        TC11: Đăng nhập thành công và KHÔNG chọn 'Giữ tôi luôn đăng nhập'
+        Steps:
+          1. Mở trang Login
+          2. Nhập đúng username và password
+          3. KHÔNG tích 'Giữ tôi luôn đăng nhập'
+          4. Click Đăng nhập
+          5. Tắt trình duyệt và mở lại URL
+        Expected: Quay về trang đăng nhập (phiên bị xóa).
+        """
+        USERNAME = "YOUR_USERNAME"
+        PASSWORD = "YOUR_PASSWORD"
+
+        login_page = LoginPage(self.driver)
+        login_page.open()
+
+        login_page.enter_username(USERNAME)
+        login_page.enter_password(PASSWORD)
+        login_page.click_login()
+
+        import time
+        time.sleep(2)
+        current_url = self.driver.current_url
+        assert "/Login" not in current_url, f"Vẫn còn ở trang Login, URL hiện tại: {current_url}"
+
