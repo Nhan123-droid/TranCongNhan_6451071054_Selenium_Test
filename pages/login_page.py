@@ -9,6 +9,8 @@ class LoginPage(BasePage):
     PASSWORD_INPUT = (By.NAME, "userpwd")
     LOGIN_BUTTON = (By.CLASS_NAME, "submit_login")
     ERROR_MESSAGE = (By.CLASS_NAME, "error")
+    CAPTCHA_INPUT = (By.NAME, "captcha")
+    CAPTCHA_IMAGE = (By.ID, "captcha")
 
     # 2. Khai báo các Actions (hành động) trên trang Login
     def open(self):
@@ -17,6 +19,13 @@ class LoginPage(BasePage):
     def get_error_message(self):
         element = self.wait.until(EC.presence_of_element_located(self.ERROR_MESSAGE))
         return element.text
+
+    def is_captcha_displayed(self):
+        try:
+            element = self.wait.until(EC.visibility_of_element_located(self.CAPTCHA_IMAGE))
+            return element.is_displayed()
+        except:
+            return False
 
     def enter_password(self, password):
         self.enter_text(self.PASSWORD_INPUT, password)

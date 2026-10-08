@@ -83,3 +83,22 @@ class TestLoginE2E(BaseTest):
         error_text = login_page.get_error_message()
         assert "Tài khoản hoặc mật khẩu không đúng" in error_text, f"Lỗi không khớp, nội dung lấy được: {error_text}"
 
+    def test_tc6_login_fail_3_times_shows_captcha(self):
+        """
+        TC6: Nhập sai thông tin 3 lần liên tiếp (Kiểm tra hiển thị Captcha)
+        """
+        login_page = LoginPage(self.driver)
+        login_page.open()
+        
+        # Nhập sai 3 lần liên tiếp
+        for _ in range(3):
+            login_page.enter_username("taikhoansai")
+            login_page.enter_password("saimatkhau")
+            login_page.click_login()
+            
+        # Kiểm tra lỗi chữ đỏ vẫn hiện
+        error_text = login_page.get_error_message()
+        assert "Tài khoản hoặc mật khẩu không đúng" in error_text
+        
+        # Kiểm tra Captcha đã xuất hiện
+        assert login_page.is_captcha_displayed(), "Hình ảnh Mã bảo mật (Captcha) KHÔNG hiển thị sau 3 lần nhập sai!"
