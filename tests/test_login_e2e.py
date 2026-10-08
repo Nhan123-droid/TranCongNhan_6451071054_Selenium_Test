@@ -23,3 +23,18 @@ class TestLoginE2E(BaseTest):
         # Hệ thống Văn phòng điện tử UTC thường dùng JS alert cho các lỗi bỏ trống.
         alert_text = login_page.get_alert_text()
         assert "Bạn chưa nhập tên đăng nhập" in alert_text, f"Lỗi không khớp, nội dung lấy được: {alert_text}"
+
+    def test_tc2_empty_password(self):
+        """
+        TC2: Để trống mật khẩu
+        """
+        login_page = LoginPage(self.driver)
+        login_page.open()
+        
+        # Nhập username là "nguyenvana", bỏ trống password
+        login_page.enter_username("nguyenvana")
+        login_page.click_login()
+        
+        # Kiểm tra alert
+        alert_text = login_page.get_alert_text()
+        assert "Bạn chưa nhập mật khẩu" in alert_text, f"Lỗi không khớp, nội dung lấy được: {alert_text}"

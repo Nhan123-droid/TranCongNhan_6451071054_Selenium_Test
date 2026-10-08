@@ -15,5 +15,8 @@ class LoginPage(BasePage):
     def enter_password(self, password):
         self.enter_text(self.PASSWORD_INPUT, password)
 
+    def enter_username(self, username):
+        self.enter_text(self.USERNAME_INPUT, username)
+
     def click_login(self):
         self.click_element(self.LOGIN_BUTTON)
